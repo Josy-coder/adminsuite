@@ -9,14 +9,15 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - Go (1.18 or later)
-- Node.js (14 or later)
-- Docker (optional, for containerized development)
+- Node.js (20 or later)
+- Docker
+- Kubernetes
 
 ### Installing
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/adminsuite.git
+   git clone https://github.com/Josy-coder/adminsuite.git
    cd adminsuite
    ```
 
