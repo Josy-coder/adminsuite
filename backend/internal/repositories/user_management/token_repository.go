@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/josy-coder/adminsuite/internal/models"
-
 )
 
 type TokenRepository interface {

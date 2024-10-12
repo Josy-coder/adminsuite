@@ -5,18 +5,17 @@ import (
 	"log"
 
 	"github.com/spf13/viper"
-
 )
 
 type Config struct {
-	DBHost         string
-	DBPort         string
-	DBUser         string
-	DBPassword     string
-	DBName         string
+	DBHost           string
+	DBPort           string
+	DBUser           string
+	DBPassword       string
+	DBName           string
 	PasetoPublicKey  string
 	PasetoPrivateKey string
-	ServerPort     string
+	ServerPort       string
 }
 
 func LoadConfig() (*Config, error) {

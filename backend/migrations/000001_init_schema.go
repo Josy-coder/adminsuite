@@ -9,7 +9,6 @@ import (
 
 	"github.com/josy-coder/adminsuite/internal/config"
 	"github.com/josy-coder/adminsuite/internal/models"
-
 )
 
 func main() {
