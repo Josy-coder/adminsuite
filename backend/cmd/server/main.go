@@ -8,13 +8,12 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "github.com/josy-coder/adminsuite/docs/api"
 	"github.com/josy-coder/adminsuite/api/routes"
+	_ "github.com/josy-coder/adminsuite/docs/api"
 	"github.com/josy-coder/adminsuite/internal/config"
 	"github.com/josy-coder/adminsuite/internal/database"
 	"github.com/josy-coder/adminsuite/internal/repositories/user_management"
 	services "github.com/josy-coder/adminsuite/internal/services/user_management"
-
 )
 
 // @title           AdminSuite API

@@ -4,7 +4,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/josy-coder/adminsuite/internal/models"
-
 )
 
 func SeedDatabase(db *gorm.DB) error {

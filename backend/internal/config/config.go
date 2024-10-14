@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/spf13/viper"
-
 )
 
 type Config struct {
@@ -51,7 +50,6 @@ func LoadConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-
 
 	config.PasetoKey = []byte(config.PasetoPrivateKey)
 

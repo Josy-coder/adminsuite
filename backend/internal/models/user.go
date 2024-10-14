@@ -5,7 +5,6 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-
 )
 
 type BaseModel struct {
@@ -56,7 +55,7 @@ type User struct {
 	MFABackupCodes     []string  `gorm:"type:json"`
 	MFASMSCode         string    `gorm:"size:6"`
 	MFASMSCodeExpiry   time.Time
-	MFAEmailCode       string    `gorm:"size:6"`
+	MFAEmailCode       string `gorm:"size:6"`
 	MFAEmailCodeExpiry time.Time
 	MFAHOTPCounter     uint64
 	LastLoginAt        *time.Time
