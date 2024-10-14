@@ -1,0 +1,574 @@
+basePath: /api/v1
+definitions:
+  models.MFAMethod:
+    enum:
+    - totp
+    - sms
+    - email
+    - hotp
+    type: string
+    x-enum-varnames:
+    - MFAMethodTOTP
+    - MFAMethodSMS
+    - MFAMethodEmail
+    - MFAMethodHOTP
+  models.Permission:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/models.SwaggerDeletedAt'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      tenantID:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Role:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/models.SwaggerDeletedAt'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/models.Permission'
+        type: array
+      tenantID:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.SwaggerDeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        type: boolean
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/models.SwaggerDeletedAt'
+      email:
+        type: string
+      emailVerified:
+        type: boolean
+      firstName:
+        type: string
+      id:
+        type: string
+      isActive:
+        type: boolean
+      lastLoginAt:
+        type: string
+      lastName:
+        type: string
+      mfabackupCodes:
+        items:
+          type: string
+        type: array
+      mfaemailCode:
+        type: string
+      mfaemailCodeExpiry:
+        type: string
+      mfaenabled:
+        type: boolean
+      mfahotpcounter:
+        type: integer
+      mfamethod:
+        $ref: '#/definitions/models.MFAMethod'
+      mfasecret:
+        type: string
+      mfasmscode:
+        type: string
+      mfasmscodeExpiry:
+        type: string
+      password:
+        type: string
+      passwordChangedAt:
+        type: string
+      phoneNumber:
+        type: string
+      preferencesConfig:
+        type: string
+      profilePicture:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/models.Role'
+        type: array
+      tenantID:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  user_management.BackupCodeVerificationRequest:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  user_management.BackupCodesResponse:
+    properties:
+      backup_codes:
+        items:
+          type: string
+        type: array
+    type: object
+  user_management.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  user_management.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user_management.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/user_management.UserResponse'
+    type: object
+  user_management.MFAVerificationRequest:
+    properties:
+      mfa_token:
+        type: string
+      temp_token:
+        type: string
+    required:
+    - mfa_token
+    - temp_token
+    type: object
+  user_management.RegisterRequest:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - username
+    type: object
+  user_management.SMSVerificationRequest:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  user_management.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  user_management.TOTPSetupResponse:
+    properties:
+      qr_code:
+        type: string
+      secret:
+        type: string
+    type: object
+  user_management.TOTPVerificationRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  user_management.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  user_management.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@adminsuite.com
+    name: API Support
+    url: http://www.adminsuite.com/support
+  description: This is the API for the AdminSuite application.
+  termsOfService: http://swagger.io/terms/
+  title: AdminSuite API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user with email and password
+      parameters:
+      - description: User Login Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/user_management.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      summary: Authenticate a user
+      tags:
+      - authentication
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh the access token using a valid refresh token
+      parameters:
+      - description: Refresh Token
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - authentication
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided details
+      parameters:
+      - description: User Registration Details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user_management.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - authentication
+  /auth/verify-mfa:
+    post:
+      consumes:
+      - application/json
+      description: Verify the MFA token provided by the user
+      parameters:
+      - description: MFA Verification Details
+        in: body
+        name: mfa_verification
+        required: true
+        schema:
+          $ref: '#/definitions/user_management.MFAVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      summary: Verify MFA token
+      tags:
+      - authentication
+  /mfa/backup-codes:
+    post:
+      consumes:
+      - application/json
+      description: Generate new backup codes for the user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.BackupCodesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Generate backup codes
+      tags:
+      - MFA
+  /mfa/disable:
+    post:
+      consumes:
+      - application/json
+      description: Disable MFA for the user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Disable MFA
+      tags:
+      - MFA
+  /mfa/setup/sms:
+    post:
+      consumes:
+      - application/json
+      description: Generate and send an SMS code for MFA
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Set up SMS-based MFA
+      tags:
+      - MFA
+  /mfa/setup/totp:
+    post:
+      consumes:
+      - application/json
+      description: Generate a TOTP secret and QR code for the user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.TOTPSetupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Set up TOTP-based MFA
+      tags:
+      - MFA
+  /mfa/verify/backup:
+    post:
+      consumes:
+      - application/json
+      description: Verify a backup code provided by the user
+      parameters:
+      - description: Backup code
+        in: body
+        name: code
+        required: true
+        schema:
+          $ref: '#/definitions/user_management.BackupCodeVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Verify backup code
+      tags:
+      - MFA
+  /mfa/verify/sms:
+    post:
+      consumes:
+      - application/json
+      description: Verify the SMS code provided by the user
+      parameters:
+      - description: SMS code
+        in: body
+        name: code
+        required: true
+        schema:
+          $ref: '#/definitions/user_management.SMSVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Verify SMS-based MFA
+      tags:
+      - MFA
+  /mfa/verify/totp:
+    post:
+      consumes:
+      - application/json
+      description: Verify the TOTP token provided by the user
+      parameters:
+      - description: TOTP token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/user_management.TOTPVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_management.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/user_management.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Verify TOTP-based MFA
+      tags:
+      - MFA
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

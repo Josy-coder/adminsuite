@@ -9,21 +9,29 @@ import (
 )
 
 type Config struct {
-	DBHost         string
-	DBPort         string
-	DBUser         string
-	DBPassword     string
-	DBName         string
-	PasetoPublicKey  string
-	PasetoPrivateKey string
-	ServerPort     string
+    DBHost           string `mapstructure:"DB_HOST"`
+    DBPort           string `mapstructure:"DB_PORT"`
+    DBUser           string `mapstructure:"DB_USER"`
+    DBPassword       string `mapstructure:"DB_PASSWORD"`
+    DBName           string `mapstructure:"DB_NAME"`
+    ServerPort       string `mapstructure:"SERVER_PORT"`
+    PasetoPublicKey  string `mapstructure:"PASETO_PUBLIC_KEY"`
+    PasetoPrivateKey string `mapstructure:"PASETO_PRIVATE_KEY"`
+	PasetoKey string
+
+    SMTPHost     string
+    SMTPPort     int
+    SMTPUsername string
+    SMTPPassword string
+    SMTPFrom     string
+
+    TwilioAccountSID  string
+    TwilioAuthToken   string
+    TwilioPhoneNumber string
 }
 
 func LoadConfig() (*Config, error) {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	viper.AddConfigPath("./config")
+	viper.SetConfigFile(".env")
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
