@@ -14,7 +14,6 @@ import (
 
 	"github.com/josy-coder/adminsuite/internal/models"
 	"github.com/josy-coder/adminsuite/internal/repositories/user_management"
-
 )
 
 var ErrMFARequired = errors.New("MFA required")

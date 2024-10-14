@@ -1,4 +1,3 @@
-
 package models
 
 import (
@@ -6,7 +5,6 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-
 )
 
 type SwaggerDeletedAt struct {
@@ -73,9 +71,9 @@ type User struct {
 
 type Role struct {
 	BaseModel
-	TenantID    uuid.UUID `gorm:"type:uuid;index"`
-	Name        string    `gorm:"size:50"`
-	Description string    `gorm:"size:255"`
+	TenantID    uuid.UUID    `gorm:"type:uuid;index"`
+	Name        string       `gorm:"size:50"`
+	Description string       `gorm:"size:255"`
 	Permissions []Permission `gorm:"many2many:role_permissions;"`
 }
 
@@ -89,8 +87,8 @@ type Permission struct {
 type TokenType string
 
 const (
-	TokenTypeRefresh TokenType = "refresh"
-	TokenTypeAccess  TokenType = "access"
+	TokenTypeRefresh       TokenType = "refresh"
+	TokenTypeAccess        TokenType = "access"
 	TokenTypePasswordReset TokenType = "password_reset"
 )
 
@@ -104,9 +102,9 @@ type Token struct {
 
 type PasswordReset struct {
 	BaseModel
-	UserID    uuid.UUID `gorm:"type:uuid;index"`
-	TokenID   uuid.UUID `gorm:"type:uuid;index"`
-	Token     Token     `gorm:"foreignKey:TokenID"`
+	UserID  uuid.UUID `gorm:"type:uuid;index"`
+	TokenID uuid.UUID `gorm:"type:uuid;index"`
+	Token   Token     `gorm:"foreignKey:TokenID"`
 }
 
 type LoginAttempt struct {
@@ -119,11 +117,11 @@ type LoginAttempt struct {
 
 type AuditLog struct {
 	BaseModel
-	UserID    uuid.UUID `gorm:"type:uuid;index"`
-	TenantID  uuid.UUID `gorm:"type:uuid;index"`
-	Action    string    `gorm:"size:50"`
-	Resource  string    `gorm:"size:50"`
-	Details   string    `gorm:"type:text"`
+	UserID   uuid.UUID `gorm:"type:uuid;index"`
+	TenantID uuid.UUID `gorm:"type:uuid;index"`
+	Action   string    `gorm:"size:50"`
+	Resource string    `gorm:"size:50"`
+	Details  string    `gorm:"type:text"`
 }
 
 type APIKey struct {
@@ -138,8 +136,8 @@ type APIKey struct {
 
 type Device struct {
 	BaseModel
-	UserID    uuid.UUID `gorm:"type:uuid;index"`
-	Name      string    `gorm:"size:50"`
-	Type      string    `gorm:"size:20"`
+	UserID     uuid.UUID `gorm:"type:uuid;index"`
+	Name       string    `gorm:"size:50"`
+	Type       string    `gorm:"size:20"`
 	LastUsedAt time.Time
 }
