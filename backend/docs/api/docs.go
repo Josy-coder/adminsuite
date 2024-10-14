@@ -556,14 +556,12 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "deleted_at": {
-                    "$ref": "#/definitions/models.SwaggerDeletedAt"
-                },
                 "description": {
                     "type": "string"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uuid"
                 },
                 "name": {
                     "type": "string"
@@ -582,14 +580,12 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "deleted_at": {
-                    "$ref": "#/definitions/models.SwaggerDeletedAt"
-                },
                 "description": {
                     "type": "string"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uuid"
                 },
                 "name": {
                     "type": "string"
@@ -608,25 +604,11 @@ const docTemplate = `{
                 }
             }
         },
-        "models.SwaggerDeletedAt": {
-            "type": "object",
-            "properties": {
-                "time": {
-                    "type": "string"
-                },
-                "valid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "models.User": {
             "type": "object",
             "properties": {
                 "created_at": {
                     "type": "string"
-                },
-                "deleted_at": {
-                    "$ref": "#/definitions/models.SwaggerDeletedAt"
                 },
                 "email": {
                     "type": "string"
@@ -638,7 +620,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uuid"
                 },
                 "isActive": {
                     "type": "boolean"

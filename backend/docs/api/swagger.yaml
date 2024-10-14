@@ -16,11 +16,10 @@ definitions:
     properties:
       created_at:
         type: string
-      deleted_at:
-        $ref: '#/definitions/models.SwaggerDeletedAt'
       description:
         type: string
       id:
+        format: uuid
         type: string
       name:
         type: string
@@ -33,11 +32,10 @@ definitions:
     properties:
       created_at:
         type: string
-      deleted_at:
-        $ref: '#/definitions/models.SwaggerDeletedAt'
       description:
         type: string
       id:
+        format: uuid
         type: string
       name:
         type: string
@@ -50,19 +48,10 @@ definitions:
       updated_at:
         type: string
     type: object
-  models.SwaggerDeletedAt:
-    properties:
-      time:
-        type: string
-      valid:
-        type: boolean
-    type: object
   models.User:
     properties:
       created_at:
         type: string
-      deleted_at:
-        $ref: '#/definitions/models.SwaggerDeletedAt'
       email:
         type: string
       emailVerified:
@@ -70,6 +59,7 @@ definitions:
       firstName:
         type: string
       id:
+        format: uuid
         type: string
       isActive:
         type: boolean

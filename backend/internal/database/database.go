@@ -11,11 +11,7 @@ import (
 	"github.com/josy-coder/adminsuite/internal/models"
 )
 
-func ConnectDB(cfg *config.Config) (*gorm.DB, error) {
-	if cfg.DBHost == "" || cfg.DBPort == "" || cfg.DBUser == "" || cfg.DBPassword == "" || cfg.DBName == "" {
-		return nil, fmt.Errorf("database configuration is incomplete")
-	}
-
+func SetupDatabase(cfg *config.Config) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
 		cfg.DBHost, cfg.DBUser, cfg.DBPassword, cfg.DBName, cfg.DBPort)
 
@@ -27,10 +23,16 @@ func ConnectDB(cfg *config.Config) (*gorm.DB, error) {
 	}
 
 	log.Println("Database connected successfully")
+
+	err = runMigrations(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to run migrations: %v", err)
+	}
+
 	return db, nil
 }
 
-func RunMigrations(db *gorm.DB) error {
+func runMigrations(db *gorm.DB) error {
 	err := db.AutoMigrate(
 		&models.Tenant{},
 		&models.User{},

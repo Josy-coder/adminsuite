@@ -1,37 +1,28 @@
-root = "."
-testdata_dir = "testdata"
-tmp_dir = "tmp"
-
 [build]
-  args_bin = []
-  bin = "./tmp/main.exe"
-  cmd = "go build -o ./tmp/main.exe ./cmd/server"
-  delay = 1000
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "frontend"]
-  exclude_file = []
-  exclude_regex = ["_test.go"]
-  exclude_unchanged = true
-  follow_symlink = true
-  full_bin = "./tmp/main.exe"
-  include_dir = []
-  include_ext = ["go", "tpl", "tmpl", "html"]
-  kill_delay = 500
-  log = "air.log"
-  send_interrupt = false
-  stop_on_error = true
-
-[color]
-  app = ""
-  build = "yellow"
-  main = "magenta"
-  runner = "green"
-  watcher = "cyan"
+cmd = "go build -o ./tmp/main.exe ./cmd/server"
+bin = "./tmp/main.exe"
+full_bin = "./tmp/main.exe"
+include_ext = ["go", "tpl", "tmpl", "html"]
+exclude_dir = ["assets", "tmp", "vendor", "frontend"]
+include_dir = []
+exclude_file = []
+exclude_regex = []
+exclude_unchanged = true
+follow_symlink = true
+log = "air.log"
+delay = 1000
+stop_on_error = true
+send_interrupt = false
+kill_delay = 500
 
 [log]
-  time = false
+time = false
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
 
 [misc]
-  clean_on_exit = true
-
-[screen]
-  clear_on_rebuild = true
+clean_on_exit = true

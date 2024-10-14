@@ -4,13 +4,17 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/josy-coder/adminsuite/internal/models"
+
 )
 
 func SeedDatabase(db *gorm.DB) error {
 	// Create a default tenant
 	tenant := models.Tenant{
-		Name:   "Default Tenant",
-		Domain: "default.adminsuite.com",
+		Name:             "Default Tenant",
+		Domain:           "default.adminsuite.com",
+		IsActive:         true,
+		AuthPolicyConfig: "{}",
+		BrandingConfig:   "{}",
 	}
 	if err := db.Create(&tenant).Error; err != nil {
 		return err
@@ -36,13 +40,15 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Create a default admin user
 	adminUser := models.User{
-		TenantID:  tenant.ID,
-		Email:     "admin@adminsuite.com",
-		Username:  "admin",
-		Password:  "adminpassword",
-		FirstName: "Admin",
-		LastName:  "User",
-		IsActive:  true,
+		TenantID:          tenant.ID,
+		Email:             "admin@adminsuite.com",
+		Username:          "admin",
+		Password:          "adminpassword",
+		FirstName:         "Admin",
+		LastName:          "User",
+		IsActive:          true,
+		MFABackupCodes:    []string{},
+		PreferencesConfig: "{}",
 	}
 	if err := db.Create(&adminUser).Error; err != nil {
 		return err

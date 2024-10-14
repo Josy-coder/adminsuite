@@ -5,18 +5,14 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+
 )
 
-type SwaggerDeletedAt struct {
-	Time  time.Time
-	Valid bool
-}
-
 type BaseModel struct {
-	ID        uuid.UUID        `gorm:"type:uuid;primary_key;" json:"id"`
-	CreatedAt time.Time        `json:"created_at"`
-	UpdatedAt time.Time        `json:"updated_at"`
-	DeletedAt SwaggerDeletedAt `gorm:"index" json:"deleted_at,omitempty"`
+	ID        uuid.UUID      `gorm:"type:uuid;primary_key;" json:"id" swaggertype:"string" format:"uuid"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty" swaggertype:"string" format:"date-time"`
 }
 
 func (base *BaseModel) BeforeCreate(tx *gorm.DB) error {
@@ -24,13 +20,14 @@ func (base *BaseModel) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
+// Tenant represents a tenant in the system
 type Tenant struct {
 	BaseModel
-	Name             string `gorm:"size:255;not null"`
-	Domain           string `gorm:"size:255;uniqueIndex"`
-	IsActive         bool   `gorm:"default:true"`
-	AuthPolicyConfig string `gorm:"type:jsonb"`
-	BrandingConfig   string `gorm:"type:jsonb"`
+	Name             string `gorm:"size:255;not null" json:"name"`
+	Domain           string `gorm:"size:255;uniqueIndex" json:"domain"`
+	IsActive         bool   `gorm:"default:true" json:"is_active"`
+	AuthPolicyConfig string `gorm:"type:jsonb" json:"auth_policy_config"`
+	BrandingConfig   string `gorm:"type:jsonb" json:"branding_config"`
 }
 
 type MFAMethod string
@@ -56,16 +53,16 @@ type User struct {
 	MFAEnabled         bool      `gorm:"default:false"`
 	MFASecret          string    `gorm:"size:64"`
 	MFAMethod          MFAMethod `gorm:"size:10"`
-	MFABackupCodes     []string  `gorm:"type:text[]"`
+	MFABackupCodes     []string  `gorm:"type:json"`
 	MFASMSCode         string    `gorm:"size:6"`
 	MFASMSCodeExpiry   time.Time
-	MFAEmailCode       string `gorm:"size:6"`
+	MFAEmailCode       string    `gorm:"size:6"`
 	MFAEmailCodeExpiry time.Time
 	MFAHOTPCounter     uint64
 	LastLoginAt        *time.Time
 	PasswordChangedAt  *time.Time
 	ProfilePicture     string `gorm:"size:255"`
-	PreferencesConfig  string `gorm:"type:jsonb"`
+	PreferencesConfig  string `gorm:"type:json"`
 	Roles              []Role `gorm:"many2many:user_roles;"`
 }
 
