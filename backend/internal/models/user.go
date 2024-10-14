@@ -8,15 +8,15 @@ import (
 )
 
 type SwaggerDeletedAt struct {
-    Time  time.Time
-    Valid bool
+	Time  time.Time
+	Valid bool
 }
 
 type BaseModel struct {
-    ID        uuid.UUID      `gorm:"type:uuid;primary_key;" json:"id"`
-    CreatedAt time.Time      `json:"created_at"`
-    UpdatedAt time.Time      `json:"updated_at"`
-    DeletedAt SwaggerDeletedAt `gorm:"index" json:"deleted_at,omitempty"`
+	ID        uuid.UUID        `gorm:"type:uuid;primary_key;" json:"id"`
+	CreatedAt time.Time        `json:"created_at"`
+	UpdatedAt time.Time        `json:"updated_at"`
+	DeletedAt SwaggerDeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 
 func (base *BaseModel) BeforeCreate(tx *gorm.DB) error {
@@ -36,37 +36,37 @@ type Tenant struct {
 type MFAMethod string
 
 const (
-    MFAMethodTOTP  MFAMethod = "totp"
-    MFAMethodSMS   MFAMethod = "sms"
-    MFAMethodEmail MFAMethod = "email"
-    MFAMethodHOTP  MFAMethod = "hotp"
+	MFAMethodTOTP  MFAMethod = "totp"
+	MFAMethodSMS   MFAMethod = "sms"
+	MFAMethodEmail MFAMethod = "email"
+	MFAMethodHOTP  MFAMethod = "hotp"
 )
 
 type User struct {
-    BaseModel
-    TenantID           uuid.UUID `gorm:"type:uuid;index"`
-    Email              string    `gorm:"size:255;uniqueIndex"`
-    Username           string    `gorm:"size:50;uniqueIndex"`
-    Password           string    `gorm:"size:255"`
-    FirstName          string    `gorm:"size:50"`
-    LastName           string    `gorm:"size:50"`
-    PhoneNumber        string    `gorm:"size:20"`
-    IsActive           bool      `gorm:"default:true"`
-    EmailVerified      bool      `gorm:"default:false"`
-    MFAEnabled         bool      `gorm:"default:false"`
-    MFASecret          string    `gorm:"size:64"`
-    MFAMethod          MFAMethod `gorm:"size:10"`
-    MFABackupCodes     []string  `gorm:"type:text[]"`
-    MFASMSCode         string    `gorm:"size:6"`
-    MFASMSCodeExpiry   time.Time
-    MFAEmailCode       string    `gorm:"size:6"`
-    MFAEmailCodeExpiry time.Time
-    MFAHOTPCounter     uint64
-    LastLoginAt        *time.Time
-    PasswordChangedAt  *time.Time
-    ProfilePicture     string    `gorm:"size:255"`
-    PreferencesConfig  string    `gorm:"type:jsonb"`
-    Roles              []Role    `gorm:"many2many:user_roles;"`
+	BaseModel
+	TenantID           uuid.UUID `gorm:"type:uuid;index"`
+	Email              string    `gorm:"size:255;uniqueIndex"`
+	Username           string    `gorm:"size:50;uniqueIndex"`
+	Password           string    `gorm:"size:255"`
+	FirstName          string    `gorm:"size:50"`
+	LastName           string    `gorm:"size:50"`
+	PhoneNumber        string    `gorm:"size:20"`
+	IsActive           bool      `gorm:"default:true"`
+	EmailVerified      bool      `gorm:"default:false"`
+	MFAEnabled         bool      `gorm:"default:false"`
+	MFASecret          string    `gorm:"size:64"`
+	MFAMethod          MFAMethod `gorm:"size:10"`
+	MFABackupCodes     []string  `gorm:"type:text[]"`
+	MFASMSCode         string    `gorm:"size:6"`
+	MFASMSCodeExpiry   time.Time
+	MFAEmailCode       string `gorm:"size:6"`
+	MFAEmailCodeExpiry time.Time
+	MFAHOTPCounter     uint64
+	LastLoginAt        *time.Time
+	PasswordChangedAt  *time.Time
+	ProfilePicture     string `gorm:"size:255"`
+	PreferencesConfig  string `gorm:"type:jsonb"`
+	Roles              []Role `gorm:"many2many:user_roles;"`
 }
 
 type Role struct {

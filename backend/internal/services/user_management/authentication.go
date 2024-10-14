@@ -19,10 +19,10 @@ import (
 var ErrMFARequired = errors.New("MFA required")
 
 type AuthenticationService struct {
-	userRepo  user_management.UserRepository
-	tokenRepo user_management.TokenRepository
-	paseto    paseto.V2
-	pasetoKey []byte
+	userRepo   user_management.UserRepository
+	tokenRepo  user_management.TokenRepository
+	paseto     paseto.V2
+	pasetoKey  []byte
 	mfaService *MFAService
 }
 
@@ -33,28 +33,28 @@ func NewAuthenticationService(
 	mfaService *MFAService,
 ) *AuthenticationService {
 	return &AuthenticationService{
-		userRepo:  userRepo,
-		tokenRepo: tokenRepo,
-		paseto:    paseto.V2{},
-		pasetoKey: pasetoKey,
+		userRepo:   userRepo,
+		tokenRepo:  tokenRepo,
+		paseto:     paseto.V2{},
+		pasetoKey:  pasetoKey,
 		mfaService: mfaService,
 	}
 }
 
 type argon2Params struct {
-	memory uint32
-	iterations uint32
+	memory      uint32
+	iterations  uint32
 	parallelism uint8
-	saltLength uint32
-	keyLength uint32
+	saltLength  uint32
+	keyLength   uint32
 }
 
 var params = &argon2Params{
-	memory: 64 * 1024,
-	iterations: 3,
+	memory:      64 * 1024,
+	iterations:  3,
 	parallelism: 4,
-	saltLength: 16,
-	keyLength: 32,
+	saltLength:  16,
+	keyLength:   32,
 }
 
 func (s *AuthenticationService) RegisterUser(user *models.User) error {
@@ -78,7 +78,7 @@ func (s *AuthenticationService) AuthenticateUser(email, password string) (*model
 		return nil, "", "", errors.New("error verifying password")
 	}
 	if !match {
-		return nil, "","", errors.New("invalid credentials")
+		return nil, "", "", errors.New("invalid credentials")
 	}
 
 	if user.MFAEnabled {
@@ -148,9 +148,9 @@ func (s *AuthenticationService) hashPassword(password string) (string, error) {
 
 func (s *AuthenticationService) verifyPassword(encodedhash, password string) (bool, error) {
 	p, salt, hash, err := decodeHash(encodedhash)
-	if err!= nil {
-        return false, err
-    }
+	if err != nil {
+		return false, err
+	}
 
 	otherHash := argon2.IDKey([]byte(password), salt, p.iterations, p.memory, p.parallelism, p.keyLength)
 
@@ -160,9 +160,9 @@ func (s *AuthenticationService) verifyPassword(encodedhash, password string) (bo
 func generateRandomBytes(n uint32) ([]byte, error) {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
-	if err!= nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 	return b, nil
 }
 
@@ -183,14 +183,14 @@ func decodeHash(encodedHash string) (p *argon2Params, salt, hash []byte, err err
 
 	p = &argon2Params{}
 	_, err = fmt.Sscanf(vals[3], "m=%d,t=%d,p=%d", &p.memory, &p.iterations, &p.parallelism)
-	if err!= nil {
-        return nil, nil, nil, err
-    }
+	if err != nil {
+		return nil, nil, nil, err
+	}
 
 	salt, err = base64.RawStdEncoding.DecodeString(vals[4])
-	if err!= nil {
-        return nil, nil, nil, err
-    }
+	if err != nil {
+		return nil, nil, nil, err
+	}
 
 	p.keyLength = uint32(len(hash))
 
@@ -198,20 +198,20 @@ func decodeHash(encodedHash string) (p *argon2Params, salt, hash []byte, err err
 }
 
 func (s *AuthenticationService) ValidateToken(token string) (*paseto.JSONToken, error) {
-    var claims paseto.JSONToken
-    err := s.paseto.Decrypt(token, s.pasetoKey, &claims, nil)
-    if err != nil {
-        return nil, err
-    }
-    return &claims, nil
+	var claims paseto.JSONToken
+	err := s.paseto.Decrypt(token, s.pasetoKey, &claims, nil)
+	if err != nil {
+		return nil, err
+	}
+	return &claims, nil
 }
 
 func (s *AuthenticationService) GetUserByID(userID string) (*models.User, error) {
-    id, err := uuid.Parse(userID)
-    if err != nil {
-        return nil, err
-    }
-    return s.userRepo.FindByID(id)
+	id, err := uuid.Parse(userID)
+	if err != nil {
+		return nil, err
+	}
+	return s.userRepo.FindByID(id)
 }
 
 func (s *AuthenticationService) GenerateTempToken(userID uuid.UUID) (string, error) {

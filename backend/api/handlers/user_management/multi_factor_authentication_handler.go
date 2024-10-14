@@ -6,9 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/josy-coder/adminsuite/internal/models"
-	services "github.com/josy-coder/adminsuite/internal/services/user_management"
 	repositories "github.com/josy-coder/adminsuite/internal/repositories/user_management"
-
+	services "github.com/josy-coder/adminsuite/internal/services/user_management"
 )
 
 type MFAHandler struct {

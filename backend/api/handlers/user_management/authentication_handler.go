@@ -8,7 +8,6 @@ import (
 
 	"github.com/josy-coder/adminsuite/internal/models"
 	"github.com/josy-coder/adminsuite/internal/services/user_management"
-
 )
 
 type AuthenticationHandler struct {

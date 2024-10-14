@@ -7,7 +7,6 @@ import (
 	"github.com/josy-coder/adminsuite/api/middleware"
 	"github.com/josy-coder/adminsuite/internal/repositories/user_management"
 	services "github.com/josy-coder/adminsuite/internal/services/user_management"
-
 )
 
 func SetupRoutes(r *gin.Engine, authService *services.AuthenticationService, mfaService *services.MFAService, userRepo user_management.UserRepository) {

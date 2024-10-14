@@ -12,7 +12,6 @@ import (
 	"github.com/josy-coder/adminsuite/internal/database"
 	"github.com/josy-coder/adminsuite/internal/repositories/user_management"
 	services "github.com/josy-coder/adminsuite/internal/services/user_management"
-
 )
 
 // @title           AdminSuite API
@@ -32,42 +31,42 @@ import (
 // @name Authorization
 
 func main() {
-    // Load configuration
-    cfg, err := config.LoadConfig()
-    if err != nil {
-        log.Fatalf("Failed to load configuration: %v", err)
-    }
+	// Load configuration
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
+	}
 
-    // Connect to database
-    db, err := database.ConnectDB(cfg)
-    if err != nil {
-        log.Fatalf("Failed to connect to database: %v", err)
-    }
+	// Connect to database
+	db, err := database.ConnectDB(cfg)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
 
-    // Run migrations
-    if err := database.RunMigrations(db); err != nil {
-        log.Fatalf("Failed to run migrations: %v", err)
-    }
+	// Run migrations
+	if err := database.RunMigrations(db); err != nil {
+		log.Fatalf("Failed to run migrations: %v", err)
+	}
 
-    // Initialize repositories
-    userRepo := user_management.NewUserRepository(db)
-    tokenRepo := user_management.NewTokenRepository(db)
+	// Initialize repositories
+	userRepo := user_management.NewUserRepository(db)
+	tokenRepo := user_management.NewTokenRepository(db)
 
-    // Initialize services
-    mfaService := services.NewMFAService(userRepo, cfg)
-    authService := services.NewAuthenticationService(userRepo, tokenRepo, []byte(cfg.PasetoKey), mfaService)
+	// Initialize services
+	mfaService := services.NewMFAService(userRepo, cfg)
+	authService := services.NewAuthenticationService(userRepo, tokenRepo, []byte(cfg.PasetoKey), mfaService)
 
-    // Initialize Gin router
-    r := gin.Default()
+	// Initialize Gin router
+	r := gin.Default()
 
-    // Setup routes
-    routes.SetupRoutes(r, authService, mfaService, userRepo)
+	// Setup routes
+	routes.SetupRoutes(r, authService, mfaService, userRepo)
 
-    // Swagger route
-    r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// Swagger route
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-    // Start server
-    if err := r.Run(":" + cfg.ServerPort); err != nil {
-        log.Fatalf("Failed to start server: %v", err)
-    }
+	// Start server
+	if err := r.Run(":" + cfg.ServerPort); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
